@@ -2,10 +2,22 @@
 
 class Aliran_Bank_Model extends Common_Model {
     
-    public function ReadSemuaAliranBank() {
-        $query = "SELECT * FROM aliran_bank";
+    public function ReadSemuaAliranBank( $limit = 100) {
+        $query = "SELECT * FROM aliran_bank "
+                . "ORDER BY id DESC "
+                . "LIMIT $limit";
         return $this->db->executeQuery($query);
     }
+    
+    public function ReadSummaryAliranBank(){
+        $query = "SELECT "
+                . "sum(IF(kategori=1, jumlah, 0)) as masuk, "
+                . "sum(IF(kategori=2, jumlah, 0)) as keluar "
+                . "FROM aliran_bank ";
+        return $this->db->executeQuery($query,'single');
+    }
+    
+    
 
     public function ReadCawanganDetail($id) {
         $query = "SELECT * FROM cawangan WHERE id='" . (int) $id . "'";

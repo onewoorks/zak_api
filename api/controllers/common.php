@@ -13,12 +13,12 @@ class Common_Controller {
         $params = explode('/', $_SERVER['REQUEST_URI']);
         $this->header = apache_request_headers();
         $this->_restConstruct($request_method);
-        $class_method = (isset($params[URIPARAM+2])) ? explode('?', $params[URIPARAM+2]) : null;
+        $class_method = (isset($params[URIPARAM + 2])) ? explode('?', $params[URIPARAM + 2]) : null;
         $this->api_ref = array(
             'method' => $request_method,
             'params' => $this->_paramsValue($request),
-            'class' => (isset($params[URIPARAM+1])) ? $params[URIPARAM+1] : false,
-            'class_method' => (isset($params[URIPARAM+2])) ? $this->ConstructMethodName($class_method[0]) : null
+            'class' => (isset($params[URIPARAM + 1])) ? $params[URIPARAM + 1] : false,
+            'class_method' => (isset($params[URIPARAM + 2])) ? $this->ConstructMethodName($class_method[0]) : null
         );
 //        $this->auth = Jwt_Utils::decode($this->header['Authorization'], STATELESS_SECRET);
     }
@@ -116,7 +116,7 @@ class Common_Controller {
         );
         return $result;
     }
-    
+
     protected function DeleteCompleted($data) {
         $result = array(
             'status' => 200,
@@ -146,10 +146,10 @@ class Common_Controller {
         $base_url = API_URI . $this->api_ref['class'] . $url_data;
         return $base_url;
     }
-    
-    protected function HeaderContentType($content_type){
-        $content = explode(';',$content_type);
-        switch($content[0]):
+
+    protected function HeaderContentType($content_type) {
+        $content = explode(';', $content_type);
+        switch ($content[0]):
             case 'application/x-www-form-urlencoded';
                 $body = json_decode(file_get_contents('php://input'), true);
                 break;
@@ -163,11 +163,32 @@ class Common_Controller {
         endswitch;
         return $body;
     }
-    
-    protected function DbDate($date){
-        $formatted = explode('/',$date);
-        return $formatted[2].'-'.$formatted[1].'-'.$formatted[0];
+
+    protected function DbDate($date) {
+        $formatted = explode('/', $date);
+        return $formatted[2] . '-' . $formatted[1] . '-' . $formatted[0];
+    }
+
+    protected function RequestInfo() {
+        $ip = getenv('HTTP_CLIENT_IP') ?:
+                getenv('HTTP_X_FORWARDED_FOR') ?:
+                getenv('HTTP_X_FORWARDED') ?:
+                getenv('HTTP_FORWARDED_FOR') ?:
+                getenv('HTTP_FORWARDED') ?:
+                getenv('REMOTE_ADDR');
+        return $ip;
     }
     
+    protected function AuthenticateUser($user){
+        $payload = array(
+            'username' => $user,
+            'user_ip' => $this->RequestInfo()
+        );
+        $key = 'ZAKV2JWTAUTH';
+        $token = Jwt_Utils::encode($payload, $key);
+        $user_session = new Users_Model();
+        $user_session->AddUserSession($payload['username'], $payload['user_ip'], $token);
+        return $token;
+    }
 
 }
