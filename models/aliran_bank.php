@@ -17,7 +17,12 @@ class Aliran_Bank_Model extends Common_Model {
         return $this->db->executeQuery($query,'single');
     }
     
-    
+    public function ReadAliranBank(){
+        $query = "SELECT "
+                . "(sum(if(kategori=1,jumlah,0)) - sum(if(kategori=2, jumlah,0))) as dalam_bank "
+                . "FROM aliran_bank ";
+        return $this->db->executeQuery($query,'single');
+    }
 
     public function ReadCawanganDetail($id) {
         $query = "SELECT * FROM cawangan WHERE id='" . (int) $id . "'";

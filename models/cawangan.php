@@ -6,6 +6,13 @@ class Cawangan_Model extends Common_Model {
         $query = "SELECT * FROM cawangan";
         return $this->db->executeQuery($query);
     }
+    
+    public function ReadSemuaCawanganLama() {
+        $query = "SELECT * FROM cawangan_lama "
+                . "WHERE status=0 "
+                . "ORDER BY nama_cawangan ASC";
+        return $this->db->executeQuery($query);
+    }
 
     public function ReadCawanganDetail($id) {
         $query = "SELECT * FROM cawangan WHERE id='" . (int) $id . "'";

@@ -28,11 +28,11 @@ class Aliran_Tunai_Model extends Common_Model {
         $query = "SELECT at.*, "
                 . "DATE_FORMAT(at.at_timeDate, '%d/%m/%Y %H:%i') as at_timeDate, "
                 . "a.stf_nama AS ahli,"
-                . "c.caw_nama AS cawangan, "
+                . "c.nama_cawangan AS cawangan, "
                 . "IF(at_kategori=2,at_jumlah,0) - IF(at_kategori=1,at_jumlah,0) as hutang "
                 . "FROM aliran_tunai at "
                 . "LEFT JOIN ahli a ON a.stf_id=at.stf_id "
-                . "LEFT JOIN tbl_cawangan c ON c.caw_id=at.caw_id "
+                . "LEFT JOIN cawangan_lama c ON c.id=at.caw_id "
                 . "WHERE $where_query "
                 . "ORDER BY at.at_id ";
         return $this->db->executeQuery($query);
@@ -60,6 +60,47 @@ class Aliran_Tunai_Model extends Common_Model {
                 . "FROM aliran_tunai "
                 . "WHERE year(at_timeDate) = '2018' AND month(at_timeDate) = '06'";
         return $this->db->executeQuery($query, 'single');
+    }
+    
+    public function ReadRekodPilihan($id_cawangan, $tarikhMula, $tarikhAkhir){
+        $query = "SELECT * "
+                . "FROM aliran_tunai "
+                . "WHERE caw_id= '" . (int) $id_cawangan. "' "
+                . "AND date(at_timeDate) >= '$tarikhMula' AND date(at_timeDate) <= '$tarikhAkhir'";
+        return $this->db->executeQuery($query);                
+    }
+    
+    public function ReadAliranTunai($jenis = 'semua'){
+        $q_where = '1';
+        switch($jenis):
+            case 'bulanan':
+                $q_where = 'year(at_timeDate)=year(now()) and month(`at_timeDate`)=month(now())';
+                break;
+            default:
+                break;
+        endswitch;
+        $query = "SELECT "
+                . "SUM(IF(at_kategori=1, at_jumlah, 0)) as masuk, "
+                . "SUM(IF(at_kategori=2, at_jumlah, 0)) as keluar, "
+                . "SUM(IF(at_kategori=1, at_jumlah, 0))-SUM(IF(at_kategori=2, at_jumlah, 0)) as baki "
+                . "FROM aliran_tunai "
+                . "WHERE $q_where";
+        return $this->db->executeQuery($query,'single');
+    }
+    
+    public function ReadAliranEmasBulanIni(){
+        $query = "SELECT "
+                . "CASE "
+                . " WHEN at_kategori = 1 THEN 'jualan' "
+                . " WHEN at_kategori = 2 THEN 'belian' "
+                . "END AS kategori, "
+                . "SUM(at_beratEmas) as berat_emas, "
+                . "SUM(at_guna) as nilai_emas "
+                . "FROM aliran_tunai "
+                . "WHERE "
+                . "YEAR(at_timeDate)=YEAR(now()) AND MONTH(`at_timeDate`)=MONTH(now()) "
+                . "GROUP BY at_kategori";
+        return $this->db->executeQuery($query);
     }
 
 }

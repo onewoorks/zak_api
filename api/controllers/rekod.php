@@ -1,11 +1,11 @@
 <?php
 
 class Rekod_Controller extends Common_Controller {
-    
+
     private $alirantunai_table;
     private $aliranbank_table;
-    
-     public function __construct() {
+
+    public function __construct() {
         $this->init();
         $api = $this->api_ref;
         $method = ucwords(strtolower($api['method']));
@@ -17,37 +17,44 @@ class Rekod_Controller extends Common_Controller {
 
     protected function GetSemuaAliranTunai() {
         $result = array(
-            'list'=> $this->alirantunai_table->ReadSemuaAliranTunai(),
-            'summary'=> $this->alirantunai_table->ReadSummaryAliranTunai()
+            'list' => $this->alirantunai_table->ReadSemuaAliranTunai(),
+            'summary' => $this->alirantunai_table->ReadSummaryAliranTunai()
         );
         return $result;
     }
-    
-    protected function GetSemuaAliranBank(){
+
+    protected function GetSemuaAliranBank() {
         $result = array(
-            'list'=> $this->aliranbank_table->ReadSemuaAliranBank(),
-            'summary'=> $this->aliranbank_table->ReadSummaryAliranBank()
+            'list' => $this->aliranbank_table->ReadSemuaAliranBank(),
+            'summary' => $this->aliranbank_table->ReadSummaryAliranBank()
         );
         return $result;
     }
-    
-    protected function GetTransaksiHariIni(){
+
+    protected function GetTransaksiHariIni() {
         $result = array(
-            'list'=> $this->alirantunai_table->ReadTransaksi(),
-            'summary'=>$this->alirantunai_table->ReadSummaryTransaksi()
+            'list' => $this->alirantunai_table->ReadTransaksi(),
+            'summary' => $this->alirantunai_table->ReadSummaryTransaksi()
         );
         return $result;
     }
-    
-    protected function GetTransaksiBulanIni(){
+
+    protected function GetTransaksiBulanIni($params) {
         $result = array(
-            'last_month'=> $this->alirantunai_table->ReadBakiBulanLepas(),
-            'list'=> $this->alirantunai_table->ReadTransaksi(false),
-            'summary'=>$this->alirantunai_table->ReadSummaryTransaksi(false),
-            'summary_combine_masuk' => $this->alirantunai_table->ReadBakiBulanLepas()['baki']+$this->alirantunai_table->ReadSummaryTransaksi(false)['masuk']
+            'last_month' => $this->alirantunai_table->ReadBakiBulanLepas(),
+            'list' => $this->alirantunai_table->ReadTransaksi(false),
+            'summary' => $this->alirantunai_table->ReadSummaryTransaksi(false),
+            'summary_combine_masuk' => $this->alirantunai_table->ReadBakiBulanLepas()['baki'] + $this->alirantunai_table->ReadSummaryTransaksi(false)['masuk']
         );
         return $result;
     }
-    
-   
+
+    protected function GetPilihan($params) {
+        $result = array(
+            'list' => $this->alirantunai_table->ReadRekodPilihan($params['cawangan'], $params['tarikhMula'], $params['tarikhAkhir']),
+            'summary' => ''
+        );
+        return $result;
+    }
+
 }
