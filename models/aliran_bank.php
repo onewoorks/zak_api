@@ -4,7 +4,7 @@ class Aliran_Bank_Model extends Common_Model {
     
     public function ReadSemuaAliranBank($tarikhMula = false, $tarikhAkhir = false, $limit = 100) {
         $where = ($tarikhMula && $tarikhAkhir) ? "DATE(timestamp) >= '$tarikhMula' AND DATE(timestamp) <= '$tarikhAkhir'" : " 1 ";
-        $limitResult = ($tarikhMula && $tarikhAkhir) ? "LIMIT $limit " : "";
+        $limitResult = ($tarikhMula && $tarikhAkhir) ? "" : "LIMIT $limit ";
         $query = "SELECT *, DATE_FORMAT(timestamp, '$this->date_format') AS tarikh "
                 . "FROM aliran_bank "
                 . "WHERE $where "

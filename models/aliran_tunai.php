@@ -11,7 +11,7 @@ class Aliran_Tunai_Model extends Common_Model {
                 . "LEFT JOIN ahli a ON a.stf_id=at.stf_id "
                 . "WHERE $where "
                 . "ORDER BY at.at_id DESC "
-                . "$limitResult "; 
+                . "$limitResult ";
         return $this->db->executeQuery($query);
     }
 
@@ -160,13 +160,14 @@ class Aliran_Tunai_Model extends Common_Model {
         return $this->db->executeQuery($query);
     }
 
-    public function ReadAliranWangMasukKeluar($bulan = 6) {
+    public function ReadAliranWangMasukKeluar($bulan = 5) {
+        $startDate = date("Y-m", mktime(0, 0, 0, date("m")-$bulan, 1, date("Y"))).'-01';
         $query = "SELECT "
-                . "CONCAT(MONTH(at_timeDate),' ',YEAR(at_timeDate)) as bulan, "
+                . "DATE_FORMAT(at_timeDate, '%M %Y') as bulan, "
                 . "SUM(IF(at_kategori=1, at_jumlah,0)) as masuk, "
                 . "SUM(IF(at_kategori=2, at_jumlah,0)) as keluar "
                 . "FROM aliran_tunai "
-                . "WHERE DATE(`at_timeDate`) >= '2018-02-01' AND DATE(at_timeDate) <= now() "
+                . "WHERE DATE(`at_timeDate`) >= '$startDate' "
                 . "GROUP BY YEAR(at_timeDate), MONTH(at_timeDate)";
         return $this->db->executeQuery($query);
     }
