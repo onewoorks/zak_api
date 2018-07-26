@@ -21,6 +21,14 @@ class Cawangan_Controller extends Common_Controller {
         return $this->cawangan_table->ReadSemuaCawanganLama();
     }
     
+    protected function GetCawanganHead(){
+        return $this->cawangan_table->ReadSemuaCawanganHead();
+    }
+    
+    protected function GetKakitangan(){
+        return $this->cawangan_table->ReadSemuaKakitangan();
+    }
+    
     protected function GetCawanganDetail($params){
         return $this->cawangan_table->ReadCawanganDetail($params['id']);
     }

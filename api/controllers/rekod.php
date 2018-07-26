@@ -15,18 +15,22 @@ class Rekod_Controller extends Common_Controller {
         return (method_exists($this, $method_name)) ? $this->JSONResponse($this->$method_name($api['params'])) : $this->ReturnError();
     }
 
-    protected function GetSemuaAliranTunai() {
+    protected function GetSemuaAliranTunai($params) {
+        $tarikhMula = (isset($params['tarikh_mula'])) ? $params['tarikh_mula'] : false;
+        $tarikhAkhir = (isset($params['tarikh_akhir'])) ? $params['tarikh_akhir'] : false;
         $result = array(
-            'list' => $this->alirantunai_table->ReadSemuaAliranTunai(),
-            'summary' => $this->alirantunai_table->ReadSummaryAliranTunai()
+            'list' => $this->alirantunai_table->ReadSemuaAliranTunai($tarikhMula, $tarikhAkhir),
+            'summary' => $this->alirantunai_table->ReadSummaryAliranTunai($tarikhMula, $tarikhAkhir)
         );
         return $result;
     }
 
-    protected function GetSemuaAliranBank() {
+    protected function GetSemuaAliranBank($params) {
+        $tarikhMula = (isset($params['tarikh_mula'])) ? $params['tarikh_mula'] : false;
+        $tarikhAkhir = (isset($params['tarikh_akhir'])) ? $params['tarikh_akhir'] : false;
         $result = array(
-            'list' => $this->aliranbank_table->ReadSemuaAliranBank(),
-            'summary' => $this->aliranbank_table->ReadSummaryAliranBank()
+            'list' => $this->aliranbank_table->ReadSemuaAliranBank($tarikhMula, $tarikhAkhir),
+            'summary' => $this->aliranbank_table->ReadSummaryAliranBank($tarikhMula, $tarikhAkhir)
         );
         return $result;
     }
@@ -51,8 +55,11 @@ class Rekod_Controller extends Common_Controller {
 
     protected function GetPilihan($params) {
         $result = array(
-            'list' => $this->alirantunai_table->ReadRekodPilihan($params['cawangan'], $params['tarikhMula'], $params['tarikhAkhir']),
-            'summary' => ''
+            'list' => $this->alirantunai_table->ReadRekodPilihan($params['cawangan'], $params['tarikh_mula'], $params['tarikh_akhir']),
+            'summary' => array(
+                "semua" => $this->alirantunai_table->ReadRekodPilihanSummary($params['cawangan']),
+                "pilihan" => $this->alirantunai_table->ReadRekodPilihanSummary($params['cawangan'], $params['tarikh_mula'], $params['tarikh_akhir'])
+            )
         );
         return $result;
     }

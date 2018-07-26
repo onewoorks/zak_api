@@ -1,5 +1,5 @@
 <?php
- 
+
 class Transaksi_Controller extends Common_Controller {
 
     private $transaksi_jualan_table;
@@ -31,7 +31,7 @@ class Transaksi_Controller extends Common_Controller {
             );
             $this->transaksi_jualan_table->CreateTransaksiJualan($data);
         endforeach;
-        return array('no_resit'=>$nobil);
+        return array('no_resit' => $nobil);
     }
 
     protected function GetJualan() {
@@ -49,11 +49,77 @@ class Transaksi_Controller extends Common_Controller {
         endif;
         return $jualan;
     }
-    
-    protected function DeleteInvoice(){
+
+    protected function DeleteInvoice() {
         $info = $this->data;
         $this->transaksi_jualan_table->DeleteRekodJualan($info['resit_no']);
         return true;
+    }
+
+    protected function PostAliranTunai() {
+        $aliran_tunai = new Aliran_Tunai_Model();
+        $dataArray = $this->data;
+        $newData = array();
+        foreach ($dataArray as $data):
+            if ($data['kategori'] == 1):
+                $data['emas_berat'] = (0 - $data['emas_berat']);
+                $data['nilai'] = (0 - $data['nilai']);
+            endif;
+            $data['zak'] = ($data['kategori'] == 1) ? $data['akaun_zak'] : 0;
+            $data['ref_bank'] = (isset($data['ref_bank'])) ? $data['ref_bank'] : 0;
+            $data['user'] = '';
+            $aliran_tunai->CreateAliranTunai($data);
+            $newData[] = $data;
+        endforeach;
+
+        $result = array(
+            'data' => $newData
+        );
+        return $result;
+    }
+
+    protected function PostAliranBank() {
+        $aliran_tunai = new Aliran_Tunai_Model();
+        $aliran_bank = new Aliran_Bank_Model();
+
+        foreach ($this->data as $data):
+            $data['nilai'] = 0;
+            $data['emas_berat'] = 0;
+            $data['cawangan_id'] = 46;
+            $data['zak'] = 0;
+            $data['stf_id'] = '68';
+            $data['ref_bank'] = '';
+            $data['ref_at_id'] = 0;
+            $no_ab = $aliran_bank->CreateAliranBank($data);
+            if ($data['kategori'] == 2):
+                $data['kategori'] = 1;
+                $data['jumlah'] = $data['jenis_keluar'];
+                $data['ref_bank'] = $no_ab;
+                $data['user'] = 1;
+                $aliran_tunai->CreateAliranTunai($data);
+            endif;
+        endforeach;
+    }
+    
+    protected function GetAliranTunaiTerkini($params){
+        $aliran_tunai = new Aliran_Tunai_Model();
+        $tarikhMula = (isset($params['tarikh_mula'])) ? $params['tarikh_mula'] : false;
+        $tarikhAkhir = (isset($params['tarikh_akhir'])) ? $params['tarikh_akhir'] : false;
+        $result = array(
+            'list' => $aliran_tunai->ReadAliranTunaiTerkini($tarikhMula, $tarikhAkhir)
+        );
+        return $result;
+    }
+    
+    protected function DeleteAliranwang(){
+        $aliran_tunai = new Aliran_Tunai_Model();
+        $aliran_tunai_deleted = new Aliran_Tunai_Deleted_Model();
+        foreach($this->data as $data):
+            $aliran_tunai_deleted->CreateAliranTunaiDeleted($data);
+            $aliran_tunai->DeleteAliranWang($data);
+        endforeach;
+        $result = 'Items deleted!';
+        return $result;
     }
 
 }

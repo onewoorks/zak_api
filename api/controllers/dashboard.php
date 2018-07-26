@@ -27,7 +27,7 @@ class Dashboard_Controller extends Common_Controller {
             'aliran_tunai_semua' => $aliranTunai->ReadAliranTunai(),
             'aliran_bank_semua' => $aliranBank->ReadAliranBank(),
             'hutang_piutang'=> $aliranTunai->ReadHutangPiutang(),
-            'graf_aliran_wang' => $aliranTunai->ReadAliranWangMasukKeluar($bulan)
+            'graf_aliran_wang' => $aliranTunai->ReadAliranWangMasukKeluar()
         );
         return $result;
     }

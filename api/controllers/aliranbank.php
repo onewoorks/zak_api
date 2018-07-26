@@ -17,9 +17,9 @@ class Aliranbank_Controller extends Common_Controller {
         return $this->cawangan_table->ReadSemuaCawangan();
     }
 
-    protected function PostAliranBank() {
-        $cawangan = $this->data;
-        $this->cawangan_table->CreateCawangan($cawangan);
-    }
-
+//    protected function PostAliranBank() {
+//        $cawangan = $this->data;
+//        $this->cawangan_table->CreateCawangan($cawangan);
+//    }
+    
 }

@@ -16,5 +16,5 @@ class Alirantunai_Controller extends Common_Controller {
     protected function GetSemuaAliranTunai() {
         return $this->alirantunai_table->ReadSemuaAliranTunai();
     }
-
+   
 }
