@@ -2,6 +2,8 @@
 
 class Common_Model {
     
+    protected $date_format = '%d/%m/%Y %H:%i:%s';
+    
     public function __construct() {
         $this->db = new Mysql_Driver();
     }
