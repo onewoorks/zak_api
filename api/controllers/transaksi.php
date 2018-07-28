@@ -62,8 +62,8 @@ class Transaksi_Controller extends Common_Controller {
         $newData = array();
         foreach ($dataArray as $data):
             if ($data['kategori'] == 1):
-                $data['emas_berat'] = (0 - $data['emas_berat']);
-                $data['nilai'] = (0 - $data['nilai']);
+                $data['emas_berat'] = $data['emas_berat'];
+                $data['nilai'] = $data['nilai'];
             endif;
             $data['zak'] = ($data['kategori'] == 1) ? $data['akaun_zak'] : 0;
             $data['ref_bank'] = (isset($data['ref_bank'])) ? $data['ref_bank'] : 0;
