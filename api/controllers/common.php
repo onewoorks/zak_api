@@ -191,4 +191,21 @@ class Common_Controller {
         return $token;
     }
 
+    protected function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
+        $sort_col = array();
+        foreach ($arr as $key=> $row) {
+            $sort_col[$key] = $row[$col];
+        }
+        array_multisort($sort_col, $dir, $arr);
+    }
+
+    protected function summary_array($myArray){
+        $sumArray = array();
+        foreach ($myArray as $k=>$subArray) {
+        foreach ($subArray as $id=>$value) {
+            $sumArray[$id]+=$value;
+            }
+        }
+        return $sumArray;
+    }
 }
