@@ -108,4 +108,15 @@ class Ambilemas_Controller extends Common_Controller {
             $this->table_ambil_emas->CreateSediaJual($input);
         endforeach;
     }
+
+    protected function GetBeratUntukJual(){
+        $list = $this->table_ambil_emas->ReadEmasUntukJual('SEDIA JUAL');
+        $total_berat = array_sum(array_column($list, 'berat_jual'));
+        return array(
+            "itemize" => $list,
+            "summary" => array(
+                "berat_jual" => $total_berat
+            )
+        );
+    }
 }

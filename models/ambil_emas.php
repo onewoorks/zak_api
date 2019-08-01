@@ -96,4 +96,15 @@ class Ambil_Emas_Model extends Common_Model {
         return $this->db->executeQuery($query);
     }
 
+    public function ReadEmasUntukJual($status){
+        $query = "SELECT "
+                . "c.nama_cawangan, "
+                . "SUM(e.berat_jual) AS berat_jual "
+                . "FROM emas_jual e "
+                . "LEFT JOIN cawangan_lama c ON c.id = e.cawangan_id "
+                . "WHERE status_jual = '". $this->db->escape($status)."' "
+                . "GROUP BY e.cawangan_id ";
+        return $this->db->executeQuery($query);
+    }
+
 }
