@@ -58,9 +58,13 @@ class Stok_Controller extends Common_Controller {
     }
 
     protected function GetStokEmasAmbil(){
-        $stok_ambil = $this->stok_ambil_model->RekodAmbilEmas();
+        $stok_ambil = $this->stok_ambil_model->RekodAmbilEmas('AMBIL');
+        $berat_emas = array_sum(array_column($stok_ambil,'berat_ambil'));
         return array(
-            'itemize' => $stok_ambil
+            'itemize' => $stok_ambil,
+            'summary' => array(
+                'berat_emas' => $berat_emas
+            )
         );
     }
 

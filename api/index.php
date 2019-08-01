@@ -27,7 +27,7 @@ endif;
 
 $target = './controllers/' . $classController . '.php';
 
-define('DIR_ROOT', '/Users/iwang/Sites/zak_api');
+define('DIR_ROOT', dirname(__DIR__,1));
 define('SITE_ROOT', $plainUrl . '/');
 define('API_URI', $plainUrl . '/api/' . $params[URIPARAM] . '/');
 define('STATELESS_SECRET', 'thisIsMyCode');
