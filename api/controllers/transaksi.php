@@ -3,6 +3,7 @@
 class Transaksi_Controller extends Common_Controller {
 
     private $transaksi_jualan_table;
+    private $ambil_emas_entity;
 
     public function __construct() {
         $this->init();
@@ -10,27 +11,54 @@ class Transaksi_Controller extends Common_Controller {
         $method = ucwords(strtolower($api['method']));
         $method_name = ($api['class_method'] == null) ? $method . 'AllStocks' : $method . ($api['class_method']);
         $this->transaksi_jualan_table = new Transaksi_Jualan_Model();
+        $this->ambil_emas_entity = new Ambil_Emas_Model();
         return (method_exists($this, $method_name)) ? $this->JSONResponse($this->$method_name($api['params'])) : $this->ReturnError();
+    }
+
+    private function KiraUntungRugiEmasPilih($data){
+        $input = [];
+        foreach($data as $d):
+            $harga_modal = $d['jual_segram'];
+            foreach($d['emas'] as $emas):
+                $input[] = array(
+                    'id'                => $emas['id'],
+                    'harga_jual'        => number_format($harga_modal*$emas['berat'],2,".",''),
+                    'no_resit_jualan'   => $d['no_resit']
+                );
+            endforeach;
+        endforeach;
+        $this->ambil_emas_entity->UpdateEmasJual($input);
     }
 
     protected function PostJualan() {
         $jualan = $this->data;
         $nobil = $this->transaksi_jualan_table->GetCurrentNoBilAndUpdate();
+        $emas_pilih = array();
+        $jualan_info = array();
         foreach ($jualan as $j):
             $data = array(
-                'cawangan' => $j['cawangan'],
-                'tarikh' => $this->DbDate($j['tarikh']),
-                'perkara' => $j['perkara'],
-                'market' => $j['market'],
-                'tolak' => $j['tolak'],
-                'berat' => $j['berat'],
-                'gst' => $j['gst'],
-                'hargaGst' => $j['hargaGst'],
-                'harga' => $j['hargaClean'],
-                'nobil' => $nobil
+                'cawangan'  => $j['cawangan'],
+                'tarikh'    => $this->DbDate($j['tarikh']),
+                'perkara'   => $j['perkara'],
+                'market'    => $j['market'],
+                'tolak'     => $j['tolak'],
+                'berat'     => $j['berat'],
+                'gst'       => $j['gst'],
+                'hargaGst'  => $j['hargaGst'],
+                'harga'     => $j['hargaClean'],
+                'nobil'     => $nobil
             );
-            $this->transaksi_jualan_table->CreateTransaksiJualan($data);
+            $jualan_info[] = $data;
+            $emas_pilih[] = array(
+                "emas"          => $j['emas_pilih'],
+                "jumlah_berat"  => $j['berat'],
+                "harga_jual"    => $j['hargaClean'],
+                "jual_segram"   => number_format(($j['hargaClean'] / $j['berat']),2),
+                "no_resit"      => $nobil
+            );
         endforeach;
+        $this->transaksi_jualan_table->CreateTransaksiJualan($jualan_info);
+        $this->KiraUntungRugiEmasPilih($emas_pilih);
         return array('no_resit' => $nobil);
     }
 

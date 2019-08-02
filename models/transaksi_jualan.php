@@ -2,20 +2,23 @@
 
 class Transaksi_Jualan_Model extends Common_Model {
 
-    public function CreateTransaksiJualan($data){
-        $query = "INSERT INTO transaksi_jualan "
-                . "(cawangan, perkara, tarikh_jual, market, tolak, berat_jual, harga_jual, no_resit, nilai_gst, gst_rate) "
-                . "VALUE "
-                . "('".(int) $data['cawangan']."', "
-                . "'".$this->db->escape($data['perkara'])."', "
-                . "'".$data['tarikh']."', "
-                . "'".$data['market']."', "
-                . "'".$data['tolak']."', "
-                . "'".$data['berat']."', "
-                . "'".$data['harga']."', "
-                . "'".$data['nobil']."' ,"
-                . "'".$data['hargaGst']."', "
-                . "'".$data['gst']."')";
+    public function CreateTransaksiJualan($data_input){
+        $query = "";
+        foreach($data_input as $data):
+            $query .= "INSERT INTO transaksi_jualan "
+                    . "(cawangan, perkara, tarikh_jual, market, tolak, berat_jual, harga_jual, no_resit, nilai_gst, gst_rate) "
+                    . "VALUE "
+                    . "('".(int) $data['cawangan']."', "
+                    . "'".$this->db->escape($data['perkara'])."', "
+                    . "'".$data['tarikh']."', "
+                    . "'".$data['market']."', "
+                    . "'".$data['tolak']."', "
+                    . "'".$data['berat']."', "
+                    . "'".$data['harga']."', "
+                    . "'".$data['nobil']."' ,"
+                    . "'".$data['hargaGst']."', "
+                    . "'".$data['gst']."'); ";
+        endforeach;
         $this->db->executeQuery($query);
         return $this->db->lastId();
     }

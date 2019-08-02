@@ -88,7 +88,7 @@ class Ambil_Emas_Model extends Common_Model {
     public function ReadAmbilEmasUntukJual(){
         $query = "SELECT "
                 . "e.* "
-                . ", SUM(e.berat_hantar) AS berat_stok "
+                . ", SUM(e.berat_selepas_tarik) AS berat_stok "
                 . ", c.nama_cawangan "
                 . "FROM emas_tarik e "
                 . "LEFT JOIN cawangan_lama c ON e.cawangan_id = c.id "
@@ -114,6 +114,7 @@ class Ambil_Emas_Model extends Common_Model {
 
     public function ReadEmasUntukJual($status){
         $query = "SELECT "
+                . "e.id as id, "
                 . "c.nama_cawangan, "
                 . "SUM(e.berat_jual) AS berat_jual "
                 . "FROM emas_jual e "
@@ -121,6 +122,19 @@ class Ambil_Emas_Model extends Common_Model {
                 . "WHERE status_jual = '". $this->db->escape($status)."' "
                 . "GROUP BY e.cawangan_id ";
         return $this->db->executeQuery($query);
+    }
+
+    public function UpdateEmasJual($data_input){
+        $query = "";
+        foreach($data_input as $data):
+            $query .= "UPDATE emas_jual SET "
+                    . "harga_jual = '". (float) $data['harga_jual']."', "
+                    . "status_jual = 'SUDAH JUAL', "
+                    . "untung = '". (float) $data['harga_jual']."' -  harga_modal, "
+                    . "no_resit_jualan = '".(int) $data['no_resit_jualan']."' "
+                    . "WHERE id='".(int) $data['id']."'; ";
+        endforeach;
+        $this->db->executeQuery($query);
     }
 
 }

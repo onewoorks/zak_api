@@ -101,12 +101,17 @@ class Ambilemas_Controller extends Common_Controller {
             $emas_lepas_tarik[] = $input;
         endforeach;
         $this->table_ambil_emas->PutEmasLepasTarik($emas_lepas_tarik);
-    }
 
+    }
+    
     protected function GetStokEmasUntukJual(){
         $stok_list = $this->table_ambil_emas->ReadAmbilEmasUntukJual();
+        $summary = array(
+            "berat_emas" => array_sum(array_column($stok_list,'berat_stok'))
+        );
         return array(
-            'itemize' => $stok_list
+            'itemize' => $stok_list,
+            'summary' => $summary
         );
     }
 
