@@ -14,8 +14,8 @@ class Laporan_Controller extends Common_Controller {
     }
 
 
-    protected function GetSemuaJualan(){
-        $itemize = $this->jual_emas->ReadSemuaJualan();
+    protected function GetSemuaJualan($params = false){
+        $itemize = $this->jual_emas->ReadSemuaJualan($params);
         $jumlah_modal = 0;
         $jumlah_berat = 0;
         $jumlah_harga_jual = 0;
