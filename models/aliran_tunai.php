@@ -199,5 +199,19 @@ class Aliran_Tunai_Model extends Common_Model {
         $this->db->executeQuery($query);
         
     }
+    
+    public function ReadRingkasanKewangan() {
+        $query = "SELECT (SELECT sum(`at_jumlah`) FROM aliran_tunai WHERE `at_kategori`=1) as wang_masuk, "
+                . "(SELECT sum(`at_jumlah`) FROM aliran_tunai WHERE `at_kategori`=2) as wang_keluar, "
+                . "(SELECT sum(if(at_kategori=1,at_jumlah,0))-sum(if(at_kategori=2,at_jumlah,0)) FROM aliran_tunai) as dalam_akaun , "
+//                . "sum(if(kategori=1,jumlah,0)) as db_1, "
+//                . "sum(if(kategori=2,jumlah,0)) as db_2, "
+                . "sum(if(kategori=1,jumlah,0)) - sum(if(kategori=2,jumlah,0)) as dalam_bank, "
+//                . "(SELECT sum(if(at_kategori=1,at_jumlah,0))-sum(if(at_kategori=2,at_jumlah,0)) FROM aliran_tunai)-(sum(if(kategori=1,jumlah,0)) - sum(if(kategori=2,jumlah,0))) as das, "
+                . "(SELECT sum(if(at_kategori=1,at_jumlah,0))-sum(if(at_kategori=2,at_jumlah,0)) FROM aliran_tunai)-(sum(if(kategori=1,jumlah,0)) - sum(if(kategori=2,jumlah,0))) - sum(if(kategori=2,jumlah,0)) AS duit_peti, "
+                . "(SELECT sum(if(at_kategori=1,at_jumlah,0))-sum(if(at_kategori=2,at_jumlah,0)) FROM aliran_tunai)-(sum(if(kategori=1,jumlah,0)) - sum(if(kategori=2,jumlah,0))) - sum(if(kategori=2,jumlah,0)) + sum(if(kategori=1,jumlah,0)) - sum(if(kategori=2,jumlah,0)) AS duit_semua  "
+                . "FROM aliran_bank";
+        return $this->db->executeQuery($query,'single');
+    }
 
 }

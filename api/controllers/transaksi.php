@@ -30,6 +30,27 @@ class Transaksi_Controller extends Common_Controller {
         $this->ambil_emas_entity->UpdateEmasJual($input);
     }
 
+    protected function PostJualanLama() {
+        $jualan = $this->data;
+        $nobil = $this->transaksi_jualan_table->GetCurrentNoBilAndUpdate();
+        foreach ($jualan as $j):
+            $data = array(
+                'cawangan' => $j['cawangan'],
+                'tarikh' => $this->DbDate($j['tarikh']),
+                'perkara' => $j['perkara'],
+                'market' => $j['market'],
+                'tolak' => $j['tolak'],
+                'berat' => $j['berat'],
+                'gst' => $j['gst'],
+                'hargaGst' => $j['hargaGst'],
+                'harga' => $j['hargaClean'],
+                'nobil' => $nobil
+            );
+            $this->transaksi_jualan_table->CreateTransaksiJualanLama($data);
+        endforeach;
+        return array('no_resit' => $nobil);
+    }
+
     protected function PostJualan() {
         $jualan = $this->data;
         $nobil = $this->transaksi_jualan_table->GetCurrentNoBilAndUpdate();
