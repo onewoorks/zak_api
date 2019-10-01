@@ -171,4 +171,16 @@ class Transaksi_Controller extends Common_Controller {
         return $result;
     }
 
+    protected function PostEditResitJualan(){
+        $transaksi_jualan = new Transaksi_Jualan_Model();
+        $input = $this->data;
+        $new_data = [];
+        foreach($input['itemList'] as $item):
+            $item['tarikh'] = $this->DbDateFromCleanDate($item['tarikh']);
+            $new_data[] = $item;
+        endforeach;
+        $transaksi_jualan->DeleteRekodJualan($input['no_resit']);
+        $transaksi_jualan->CreateTransaksiJualan($new_data);
+    }
+
 }

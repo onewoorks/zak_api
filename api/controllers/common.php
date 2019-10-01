@@ -169,6 +169,14 @@ class Common_Controller {
         return $formatted[2] . '-' . $formatted[1] . '-' . $formatted[0];
     }
 
+    protected function DbDateFromCleanDate($input_date){
+        $ddate = explode(' ', $input_date);
+        $month = ['january','february', 'march', 'april','may','june','july','august','september','october','november','december'];
+        $month_index = sprintf('%02d',array_search(strtolower($ddate[1]), $month) + 1);
+        $date = $ddate[2] . '-' . $month_index . '-' . $ddate[0] . ' 00:00:00';
+        return $date;
+    }
+
     protected function RequestInfo() {
         $ip = getenv('HTTP_CLIENT_IP') ?:
                 getenv('HTTP_X_FORWARDED_FOR') ?:
