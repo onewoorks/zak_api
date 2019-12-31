@@ -71,4 +71,22 @@ class Users_Controller extends Common_Controller {
         return true;
     }
 
+    protected function GetSenaraiKakitangan(){
+        return $this->users_table->ReadSenaraiKakitangan();
+    }
+
+    protected function PostDaftarKakitangan(){
+        $kakitangan = $this->data;
+        return $this->users_table->CreateKakitangan($kakitangan);
+    }
+
+    protected function DeleteKakitangan($params){
+        $this->users_table->DeleteKakitangan($params['id']);
+    }
+
+    protected function PutDaftarKakitangan(){
+        $data = $this->data;
+        $this->users_table->UpdateKakitangan($data);
+    }
+
 }

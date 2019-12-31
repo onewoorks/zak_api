@@ -32,10 +32,19 @@ class Cawangan_Controller extends Common_Controller {
     protected function GetCawanganDetail($params){
         return $this->cawangan_table->ReadCawanganDetail($params['id']);
     }
+
+    protected function GetCawanganDetailLama($params){
+        return $this->cawangan_table->ReadCawanganLamaDetail($params['id']);
+    }
     
     protected function PostTambahCawangan(){
         $cawangan = $this->data;
         $this->cawangan_table->CreateCawangan($cawangan);
+    }
+
+    protected function PostTambahCawanganLama(){
+        $cawangan = $this->data;
+        $this->cawangan_table->CreateCawanganLama($cawangan);
     }
     
     protected function PutKemaskiniCawangan(){
@@ -43,5 +52,30 @@ class Cawangan_Controller extends Common_Controller {
         $this->cawangan_table->UpdateCawangan($cawangan);
     }
 
+    protected function PutKemaskiniCawanganLama(){
+        $cawangan = $this->data;
+        $this->cawangan_table->UpdateCawanganLama($cawangan);
+    }
 
+    protected function DeleteCawanganLama($params){
+        $this->cawangan_table->UpdateCawanganLamaStatus($params['id'],1);
+    }
+
+    protected function GetCawanganAhli(){
+        return $this->cawangan_table->ReadCawanganAhli();
+    }
+
+    protected function PostTambahCawanganAhli(){
+        $ahli = $this->data;
+        $this->cawangan_table->InsertAhliCawangan($ahli);
+    }
+
+    protected function PutCawanganAhli(){
+        $ahli = $this->data;
+        $this->cawangan_table->UpdateAhliCawangan($ahli);
+    }
+
+    protected function DeleteCawanganAhli($params){
+        $this->cawangan_table->DeleteAhliCawangan($params['id']);
+    }
 }
