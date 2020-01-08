@@ -8,6 +8,7 @@ class Aliran_Bank_Model extends Common_Model {
         $query = "SELECT *, DATE_FORMAT(timestamp, '$this->date_format') AS tarikh "
                 . "FROM aliran_bank "
                 . "WHERE $where "
+                . "AND kategori < 5 "
                 . "ORDER BY id DESC "
                 . "$limitResult ";
         return $this->db->executeQuery($query);
@@ -36,13 +37,19 @@ class Aliran_Bank_Model extends Common_Model {
     }
 
     public function CreateAliranBank($data) {
-        $query = "INSERT INTO aliran_bank (perkara,jumlah,kategori,ref_at_id) VALUE ("
+        $query = "INSERT INTO aliran_bank (perkara,jumlah,kategori,ref_at_id, user_id) VALUE ("
                 . "'" . $this->db->escape(strtoupper($data['perkara'])) . "', "
                 . "'" . $this->db->escape($data['jumlah']) . "', "
                 . "'" . $this->db->escape($data['kategori']) . "', "
-                . "'" . $this->db->escape($data['ref_at_id']) . "'"
+                . "'" . $this->db->escape($data['ref_at_id']) . "', "
+                . "'" . $this->db->escape($data['user_id']) . "' "
                 . ")";
         $this->db->executeQuery($query);
         return $this->db->getLastId();
+    }
+
+    public function DeleteAliranBank($id){
+        $query = "UPDATE aliran_bank SET kategori = 99 WHERE id = '".(int) $id."'";
+        $this->db->executeQuery($query);
     }
 }

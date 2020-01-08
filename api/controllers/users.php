@@ -18,13 +18,13 @@ class Users_Controller extends Common_Controller {
         $isUser = $this->users_table->ReadUser($input['username'], $input['password']);
         $token = false;
         if($isUser):
-            $user = $isUser['id'];
+            $user = $isUser['usr_name'];
             $token = $this->AuthenticateUser($user);
         endif;
         return array(
-            'id' => $isUser['id'],
-            'username' => $isUser['username'],
-            'full_name' => $isUser['full_name'],
+            'id' => $isUser['usr_id'],
+            'username' => $isUser['usr_name'],
+            'full_name' => $isUser['usr_fname'],
             'token'=>$token);
     }
 

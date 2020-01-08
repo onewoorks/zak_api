@@ -182,7 +182,7 @@ class Aliran_Tunai_Model extends Common_Model {
                 . "'" . $this->db->escape($data['emas_berat']) . "', "
                 . "'" . $this->db->escape($data['stf_id']) . "', "
                 . "'" . $this->db->escape($data['cawangan_id']) . "', "
-                . "" . (int) $data['user'] . ", "
+                . "'" . $this->db->escape($data['user']) . "', "
                 . "'" . $this->db->escape($data['zak']) . "', "
                 . "'" . $this->db->escape($data['ref_bank']) . "'"
                 . ")";

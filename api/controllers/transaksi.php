@@ -130,13 +130,12 @@ class Transaksi_Controller extends Common_Controller {
     protected function PostAliranBank() {
         $aliran_tunai = new Aliran_Tunai_Model();
         $aliran_bank = new Aliran_Bank_Model();
-
         foreach ($this->data as $data):
             $data['nilai'] = 0;
             $data['emas_berat'] = 0;
-            $data['cawangan_id'] = 46;
+            $data['cawangan_id'] = 0;
             $data['zak'] = 0;
-            $data['stf_id'] = '68';
+            $data['stf_id'] = 68;
             $data['ref_bank'] = '';
             $data['ref_at_id'] = 0;
             $no_ab = $aliran_bank->CreateAliranBank($data);
@@ -144,7 +143,7 @@ class Transaksi_Controller extends Common_Controller {
                 $data['kategori'] = 1;
                 $data['jumlah'] = $data['jenis_keluar'];
                 $data['ref_bank'] = $no_ab;
-                $data['user'] = 1;
+                $data['user'] = $data['user_id'];
                 $aliran_tunai->CreateAliranTunai($data);
             endif;
         endforeach;
@@ -181,6 +180,11 @@ class Transaksi_Controller extends Common_Controller {
         endforeach;
         $transaksi_jualan->DeleteRekodJualan($input['no_resit']);
         $transaksi_jualan->CreateTransaksiJualan($new_data);
+    }
+
+    protected function DeleteAliranBank($params){
+        $aliran_bank = new Aliran_Bank_Model();
+        $aliran_bank->DeleteAliranBank($params['id']);
     }
 
 }

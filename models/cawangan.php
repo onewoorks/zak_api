@@ -49,7 +49,7 @@ class Cawangan_Model extends Common_Model {
         . "'" . $this->db->escape($data['nama']) . "', "
         . "'" . $this->db->escape($data['alamat']) . "', "
         . "'" . $this->db->escape($data['notelefon']) . "', "
-        . "'" . (int) $data['profile'] . "', "
+        . "'" . $this->db->escape($data['profile']) . "', "
             . "'0'"
             . ")";
         return $this->db->executeQuery($query);
@@ -107,7 +107,7 @@ class Cawangan_Model extends Common_Model {
         . "0, "
         . "'" . $this->db->escape($input['akaun_bank']) . "', "
         . "'" . (int) $input['cawangan_id'] . "', "
-        . "'" . (int) $input['profile_uid'] . "', "
+        . "'" . $this->db->escape($input['profile_uid']) . "', "
             . "0 "
             . ")";
         return $this->db->executeQuery($query);
